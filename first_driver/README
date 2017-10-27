@@ -1,0 +1,17 @@
+
+An introduction for "Hello World!" loadable kernel module (LKM) that can display a message
+in the /var/log/kern.log file ( demsg ) when the module is loaded and removed. 
+
+Shows different way to write kernel module
+
+method_1 :  A program to "Hello World!" loadable kernel module (LKM) that can display a message.
+method_2 :  A program to "Hello World!" loadable kernel module (LKM) that can display a message.	    
+
+
+Procedure to run both of the program
+	$make                    //Compile the code and create a *.ko file
+	$insmod first_driver.ko  //Insert the module into a kernel
+	$dmesg                   //See the output logs
+	$rmmod first_driver      //Remove the module from the kernel
+	$dmesg                   //See the ouput log
+
