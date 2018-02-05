@@ -6,8 +6,11 @@ it on the terminal.
 
 Procedure to run the module :
 -----------------------------
-
-sudo insmod param.ko count=5 my_array=1,2,3,4,5 name="Sajitha" int_value=999 
-dmesg | tail
+$ make             // Compile the code
+Insert the module :
+$ sudo insmod param.ko count=5 my_array=1,2,3,4,5 name="Sajitha" int_value=999 
+$ dmesg | tail     // Display the output on terminal
+$ sudo rmmod param // Remove the module
+$ dmesg | tail     // Display the output on terminal
 
 
