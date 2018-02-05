@@ -1,0 +1,13 @@
+Passing Command Line Arguments to a Module :
+--------------------------------------------
+
+Program to take a command line arguments and print
+it on the terminal.
+
+Procedure to run the module :
+-----------------------------
+
+sudo insmod param.ko count=5 my_array=1,2,3,4,5 name="Sajitha" int_value=999 
+dmesg | tail
+
+
