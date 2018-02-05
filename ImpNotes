@@ -1,0 +1,13 @@
+1. How make the module as pemanant :
+   --------------------------------
+	Assume that my module name is mymodule.ko.
+	Copy the kernel module to the drivers directory.
+
+	$ sudo cp mymodule.ko /lib/modules/$(uname -r)/kernel/drivers/
+	Add the simple name of my module to the file /etc/modules. 
+	You can edit the file or just append to it as shown here.
+	$ sudo echo 'mymodule' >> /etc/modules
+	Update the list of module dependencies.
+	$ sudo depmod
+	Reboot the computer and it will worked.
+
