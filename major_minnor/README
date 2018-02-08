@@ -1,0 +1,32 @@
+Major and Minor Number :
+------------------------
+Linux kernel represents character and block devices as a pair of numbers <major,minor>
+Major number can be assigned to drive at dynamic/staic.
+At the removal time the major number is removed by kernel.
+
+dynamic : Show the program to assign major and minor number dynamically.
+static  : Show the program to assign major and minor number statically.
+
+Major Number :
+--------------
+The major number identifies the software/driver associated with the hardware/device.
+The kernel uses the major number to identify the device.
+Some major numbers are reserved for particular device drivers by default. 
+Other major numbers are dynamically assigned to a device driver when Linux boots. 	
+
+Minor Number :
+-------------
+The device driver uses the minor number to distinguish individual physical or logical devices.
+The minor number is used only by the driver specified by the major number.
+minor number provides a way for the driver to differ entiate among them.
+
+User space programs access character and block devices through device nodes also referred 
+to as device special files. When a device node is created, it is associated with a major 
+and minor number.
+
+How to create a device node under /dev directory :
+--------------------------------------------------
+
+mknod /dev/<driver_name> c <major_number> <minor_number : range <0-255> > 
+
+
