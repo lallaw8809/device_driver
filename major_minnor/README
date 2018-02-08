@@ -1,11 +1,11 @@
 Major and Minor Number :
 ------------------------
 Linux kernel represents character and block devices as a pair of numbers <major,minor>
-Major number can be assigned to drive at dynamic/staic.
-At the removal time the major number is removed by kernel.
+Major number can be dynamically or statically assigned to drive.
+At the removal time, the major number is removed by kernel.
 
-dynamic : Show the program to assign major and minor number dynamically.
-static  : Show the program to assign major and minor number statically.
+dynamic : Shows the program to assign major and minor number dynamically.
+static  : Shows the program to assign major and minor number statically.
 
 Major Number :
 --------------
