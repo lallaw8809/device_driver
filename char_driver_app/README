@@ -1,0 +1,25 @@
+Introduction:
+-------------
+Program to write basic character driver and pass data between 
+user space and kernel space.
+
+char_driver_app.c : sample code for character driver.
+			Register a char driver with a dynamic major number.
+			Register char driver with file system structure.
+application.c     : User space program to,
+			Open the char driver.
+			write a string to the driver.
+			Read back the written string from driver.
+			Close the driver.
+
+Procedure to run teh code :
+---------------------------
+
+$ make                           //compile the code
+$ sudo insmod char_driver_app.ko //insert the driver
+$ dmesg | tail                   //check print logs with major number
+$ cat /proc/devices              //Validate the device register with a driver
+$ sudo mknod /dev/CharDriver c <major> <minor> //create a node
+$ sudo ./app //write and read back the string from LKM
+$ sudo  rmmod char_driver_app   //Remove the kernal module 
+$ sudo rm -rf /dev/CharDriver //Remove the device node
