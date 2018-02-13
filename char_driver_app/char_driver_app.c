@@ -43,6 +43,7 @@ static int __init char_driver_init(void) /* Constructor */
 {
 	/* Register the char driver 
 	 * Dynamically allocate a major number for the device
+	 * Major device number or 0 for dynamic allocation 
 	 */
 	majorNumber = register_chrdev(0, DEVICE_NAME, &fops);
 	if (majorNumber<0){
