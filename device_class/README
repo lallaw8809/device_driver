@@ -1,0 +1,24 @@
+Introduction:
+-------------
+Program to write basic character driver, create a device node and
+pass data between user space and kernel space.
+
+device_class.c     : sample code for character driver.
+			Register a char driver with a dynamic major number.
+			Register char driver with file system structure.
+			Create a device mode under /dev directory which is used to
+			 communicate b/w user and kernel space.
+
+Procedure to run teh code :
+---------------------------
+
+$ make                           //compile the code
+$ sudo insmod device_class.ko    //insert the driver
+$ dmesg | tail                   //check print logs with major number
+$ cat /proc/devices              //Validate the device register with a driver
+$ ls /sys/class/Char-class       //Validation of device Class
+$ ls -il /dev/CharDriver         //Validation of device node
+$ sudo chmod 777 /dev/CharDriver //Change permission of devcie node
+$ echo 1 > /dev/CharDriver       //Write a data on device node
+$ sudo  rmmod device_class       //Remove the kernal module 
+$ sudo rm -rf /dev/CharDriver    //Remove the device node
