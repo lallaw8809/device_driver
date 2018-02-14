@@ -1,0 +1,24 @@
+cdev :
+------
+In linux kernel, struct inode is used to represent the files.
+struct inode has all the information about files.
+
+struct cdev is a member of inode structure.
+The struct cdev is the kernel’s internal structure that represents char devices and
+represent a character device within the kernel.  
+
+struct cdev encapsulates the file_operations structure and some other important
+driver information(major/minor no). It is the new way of registering character driver
+with kernel. 
+
+Procedure to run the code :
+---------------------------
+$ make                       //Compile the code
+$ sudo insmod cdev.ko        //Insert the module
+$ dmesg                      //check the print logs
+$ cat /proc/devices          //check the char driver registration
+$ sudo mknod /dev/cdev c <major_num> 0 //create a device node
+$ sudo chmod 777 /dev/cdev   //change the permission
+$ echo 1 > /dev/cdev         //write into device node
+$ cat /dev/cdev              //read into device node
+$ sudo rmmod cdev 	     //Remove the module
