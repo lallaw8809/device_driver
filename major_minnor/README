@@ -6,6 +6,8 @@ At the removal time, the major number is removed by kernel.
 
 dynamic : Shows the program to assign major and minor number dynamically.
 static  : Shows the program to assign major and minor number statically.
+multi_minor : Program to show, how to register a char driver with multiple
+	      minor number.
 
 Major Number :
 --------------

@@ -1,8 +1,10 @@
-/* Program to register the character driver file operation with
- * struct cdev.
- * 
+/* Program for character driver
+ * 	Register the char driver with major and minor number
+ * 	Register the cdev structure with file operation
+ *	Create a devioce node using device tree.
+ *
  * Author : Lal Bosco Lawrence   
- * Date   : 14-Feb-2018
+ * Date   : 15-Feb-2018
  */
 
 #include <linux/init.h>     // Macros used to mark up functions e.g. __init __exit
@@ -11,11 +13,13 @@
 #include <linux/kernel.h>
 #include <linux/types.h>
 #include <linux/kdev_t.h>
+#include <linux/device.h>
 #include <linux/fs.h>       //File system structure
 #include <linux/uaccess.h>  //Required for the copy to user function
 #include <linux/cdev.h>
 
-#define DEVICE_NAME "cdev"
+#define DEVICE_NAME "FinalDriver"
+#define CLASS_NAME  "Char-class"
 
 static dev_t first;            // Global variable for the first device number
 unsigned int baseminor    = 0; // First of the requested range of minor number
@@ -25,8 +29,9 @@ static int    count = 0;
 static char   message[256] = {0}; //Memory for the string that is passed from userspace
 static short  size_of_message;
 
-
-struct cdev *my_cdev;
+static struct class*  charClass  = NULL; ///< The device-driver class struct pointer
+static struct device* charDevice = NULL; ///< The device-driver device struct pointer
+struct cdev my_cdev;
 
 // The prototype functions for the character driver
 static int     char_dev_open(struct inode *, struct file *);
@@ -48,52 +53,63 @@ static struct file_operations fops =
 
 static int __init char_driver_init(void) /* Constructor */
 {
-	/* Register the char driver 
-	 * Dynamically allocate a major number for the device
-	 * Major device number or 0 for dynamic allocation 
-	 */
 	int ret;
+	/* Register the charatcer driver with device name
+	 * Major number will allocated at dynamically
+	 * Return : 0   : Success
+	 *	    -ve : Fail
+	 */
 	if ((ret = alloc_chrdev_region(&first, baseminor, num_of_minor, DEVICE_NAME)) < 0)
 	{
-		printk(KERN_INFO "Unable to register the driver");
 		return ret;
 	}
-
-	/* struct cdev encapsulates the file_operations structure and some other 
-	 * important driver information(major/minor no). It is the new way of registering 
-	 * character driver with kernel.
-	 */
-
-	/* Initialize struct cdev with the defined file_operations */
-	my_cdev = cdev_alloc( );
-	my_cdev->ops = &fops;	
-	my_cdev->owner = THIS_MODULE;
-	/* Add a character device to the system.  */
-	if (cdev_add(my_cdev, first, num_of_minor) < 0)
-	{
-		printk("Device Add Error\n");
-		return -1;
-	}
-
 	printk(KERN_INFO "Successfully register the [%s] driver with major number %d\n" \
 					,DEVICE_NAME,  MAJOR(first));
 
+	/* Initialize struct cdev with the defined file_operations */
+	cdev_init(&my_cdev, &fops);
+	/* Add a character device to the system.  */
+	if ((ret = cdev_add(&my_cdev, first, num_of_minor)) < 0)
+	{
+		unregister_chrdev_region(first, num_of_minor);
+		return ret;
+	}
+
 	printk(KERN_INFO "Create a device node...\n");
-	printk(KERN_INFO "----------------------------------------------------\n");
-	printk(KERN_INFO "sudo mknod /dev/%s c %d 0\n",DEVICE_NAME,  MAJOR(first));
-	printk(KERN_INFO "-----------------------------------------------------\n");
+	/* Create a device class 
+	 * This will create the struct class for our device driver under /sys/class/
+	 */
+	if (IS_ERR(charClass = class_create(THIS_MODULE, CLASS_NAME)))
+	{
+		cdev_del(&my_cdev);
+		unregister_chrdev_region(first, num_of_minor);
+		printk(KERN_ALERT "Failed to register device class\n");
+		return PTR_ERR(charClass);
+	}
+	/* Create a device : Create the device node /dev/ */
+	if (IS_ERR(charDevice = device_create(charClass, NULL, first, NULL, DEVICE_NAME)))
+	{
+		class_destroy(charClass);
+		cdev_del(&my_cdev);
+		unregister_chrdev_region(first, num_of_minor);
+		printk(KERN_ALERT "Failed to create the device\n");
+		return PTR_ERR(charDevice);
+	}
 
 	return 0;
 }
 
 static void __exit char_driver_exit(void) /* Destructor */
 {
+	printk(KERN_INFO "Unregistered the driver!\n");
+
+	/* Remove the device */
+	device_destroy(charClass, first);
+	class_destroy(charClass);
+	/* Remove a character device from the system */
+	cdev_del(&my_cdev);
 	/* Unregister the character driver */
 	unregister_chrdev_region(first, num_of_minor);
-	/* Remove a character device from the system */
-	cdev_del(my_cdev);
-
-	printk(KERN_INFO "Unregistered the driver!\n");
 }
 
 /*  This function is called whenever device is opened from user space
