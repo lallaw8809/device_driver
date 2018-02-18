@@ -21,7 +21,9 @@ unsigned int num_of_minor = 1; // Number of minor numbers
 static int __init char_driver_init(void) /* Constructor */
 {
 	int ret;
-	/* Statically allocate the major and minor number */
+	/* Statically allocate the major and minor number 
+	 * #define MKDEV(ma,mi)	((ma)<<8 | (mi))
+	 */
 	first = MKDEV(MY_MAJOR, MY_MINOR);
 	/* Register the charatcer driver with device name
 	 * Major number will allocated at Statically
@@ -44,6 +46,7 @@ static void __exit char_driver_exit(void) /* Destructor */
 	first = MKDEV(MY_MAJOR, MY_MINOR);
 	/* Unregister the character driver */
 	unregister_chrdev_region(first, num_of_minor);
+
 	printk(KERN_INFO "Unregister char driver\n");
 }
 
