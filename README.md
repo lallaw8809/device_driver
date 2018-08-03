@@ -8,5 +8,5 @@ char_driver_app : Program to pass the data between user space and kernel space.
 device_class : Program to show how to create a device node.  
 cdev         : Program to show how the register the file operation with cdev structure.  
 final_char_driver : Sample code for char driver.  
-
+ioctl        : Sample to code to communicate between kernel and user space using ioctl.  
 

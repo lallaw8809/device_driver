@@ -1,0 +1,22 @@
+IOCTL :
+-------
+	IOCTL is the way to communicate between kernel space and user space.
+	IOCTL is referred as Input and Output Control (Integer values), which
+	is used to talking to device drivers.
+
+Kernel Space vs User Space  :
+--------------------------------
+	OS segregated the virtual memory into kernel and user space.
+	Kernel space is reserved for running kernel, kernel extension and device driver.
+	User space : All of the user space application is ruuning here and it will swapped,
+	if necessary.
+
+Procedure to run the code :
+---------------------------
+
+$ make
+$ sudo insmod ioctl.ko
+$ dmesg      //check the module insertion and validate the registered major number
+$ sudo mknod /dev/ioctl_driver c 245 0 
+$ sudo  chmod 777 /dev/ioctl_driver
+$ ./app
